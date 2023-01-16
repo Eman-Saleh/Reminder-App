@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Reminder.FE.Models.CategoryModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" type="text/css" href="~/lib/DataTable/jquery.dataTables.min.css">
+@*<!-- ======= Breadcrumbs ======= -->
+<section class="breadcrumbs">
+        <h2>Recent Categories</h2>
+</section><!-- End Breadcrumbs -->*@
+<!-- ======= Blog Section ======= -->
+
+    <section id="blog" class="blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 text-end">
+                    <a asp-controller="Category" asp-action="AddEditCategory" asp-route-id="0" class="button mb-4 ">
+                        Add New Category
+                     </a>
+                 </div>
+            </div>
+            <div class="row">
+                <table id="example" class="table table-striped table-bordered dt-responsive nowrap" role="grid" style="width:100%">
+                    <caption></caption>
+                    <thead>
+                        <tr>
+                            <th scope="col"> Name</th>
+                            <th scope="col">Created By</th>
+                            <th scope="col">Category Parent</th>
+                            <th></th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item._CreatedBy</td>
+                                <td>@item.ParentName</td>
+                                <td>
+                                            <a href='~/Category/AddEditCategory?Id=@item.Id' class="btn btn-orange-outline btn-sm "><i class="fa fa-edit" title="Edit"></i></a>
+                                            <div id="#DelDealId" class="btn btn-outline-danger btn-sm" onclick="ConfirmDelete('@item.Id')"><i class="fa fa-trash" title="Delete"></i></div>
+                                       </td>
+                            </tr>
+                        }
+                        </tbody>
+                        </table>
+            </div>
+        </div>
+    </section><!-- End Blog Section -->
+
+            @*modal*@
+
+        <div class="modal fade" id="DeleteCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Suredelete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">Suredeletemsg
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a class="btn btn-danger" onclick="DeleteCategory()" href="#">Delete</a>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="hiddenCategoryId" />
+        </div>
+
+        @section scripts{
+            <script>
+
+
+                var ConfirmDelete = function(Cat_Id) {
+                    $("#hiddenCategoryId").val(Cat_Id);
+                    $("#DeleteCategoryModal").modal('show');
+                }
+                var DeleteCategory = function() {
+                    var newsId = $("#hiddenCategoryId").val();
+                    //alert(newsId);
+                    $.ajax({
+                        type: "Get",
+                        url: "../Category/Delete?id="+newsId ,
+                        dataType: "json",
+                        contentType:'application/json',
+                        success: function(result) {
+
+                            if (result["status"] == "success") {
+                                $("#DeleteCategoryModal").modal("hide");
+                                $("#row_" + newsId).remove();
+                                location.reload();
+
+                            }
+                            else {
+                                $("#DeleteCategoryModal").modal("hide");
+                                alert("Cann't Delete Category");
+
+                            }
+                        },
+                    })
+                }
+            </script>
+        }
+

@@ -1,0 +1,117 @@
+﻿@model IEnumerable<Reminder.FE.Models.ReminderModel>
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@{
+    ViewData["Title"] = "Reminder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card accordion-item my-4">
+                        <div class="card-header accordion-header p-0 position-relative mt-n4 mx-3 z-index-2" id="panelsStayOpen-headingOne">
+                            <button class="accordion-button bg-gradient-primary shadow-primary border-radius-lg" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                <h6 class="text-white text-capitalize ps-3">Reminder</h6>
+                            </button>
+                        </div>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                            <div class="card-body p-4 accordion-body">
+                                <div class="row form-group">
+
+                                    <div class="col-sm-12 text-end">
+                                        <a asp-controller="Reminder" asp-action="AddEditReminder" asp-route-id="0" class="button mb-4 ">
+                                           Add New Reminder
+                                        </a>
+                                    </div>
+                                </div>
+                                <table id="example" class="table table-striped table-bordered dt-responsive nowrap" role="grid" style="width:100%">
+                                    <caption></caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Created By</th>
+                                            <th scope="col">Reminder Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach(var item in Model)
+                                    {
+                                    <tr>
+                                        <td>@item.Title</td>
+                                        <td>@item._Category.</td>
+                                        <td>@item._CreatedBy</td>
+                                        <td>@item.ReminderDate</td>
+                                        <td>  
+                                            <a href='~/Reminder/AddEditReminder?Id=@item.Id' class="btn btn-orange-outline btn-sm "><i class="fa fa-edit" title="Edit"></i></a>
+@*                                            <div id="#DelDealId" class="btn btn-outline-danger btn-sm" onclick="ConfirmDelete('@item.Id')"><i class="fa fa-trash" title="Delete"></i></div>
+*@                                        </td>
+                                    </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="hiddenReminderId" />
+        </div>
+
+
+        @*modal*@
+
+        <div class="modal fade" id="DeleteReminderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Suredelete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">Suredeletemsg
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a class="btn btn-danger" onclick="DeleteReminder()" href="#">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @section scripts{
+            <script>
+
+
+                var ConfirmDelete = function(Emp_Id) {
+                    $("#hiddenReminderId").val(Emp_Id);
+                    $("#DeleteReminderModal").modal('show');
+                }
+                var DeleteReminder = function() {
+                    var newsId = $("#hiddenReminderId").val();
+                    $.ajax({
+
+                        type: "POST",
+                        url: "../Reminder/Delete",
+                        data: { id: newsId },
+                        success: function(result) {
+
+                            if (result["status"] == "success") {
+                                $("#DeleteReminderModal").modal("hide");
+                                $("#row_" + newsId).remove();
+                                location.reload();
+
+                            }
+                            else {
+                                $("#DeleteReminderModal").modal("hide");
+                                alert("Cann't Delete Reminder");
+
+                            }
+                        },
+                    })
+                }
+            </script>
+        }
+

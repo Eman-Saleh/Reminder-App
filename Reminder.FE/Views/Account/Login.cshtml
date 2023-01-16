@@ -1,0 +1,44 @@
+﻿
+@model  Reminder.FE.Models.LoginModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "SignIn";
+    Layout = null;
+}
+
+        <link href="~/css/Site.css" rel="stylesheet">
+        <link href="~/css/LoginStyle.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="container" id="container">
+                <div class="overlay-container">
+                    <div class="overlay">
+
+                        <div class="overlay-panel overlay-left">
+                            @*<img class="img-fluid img-fluid mb-4" src="~/Images/login.png" width="60" />*@
+
+                            <h2>Reminder App</h2>
+
+                            <p>
+</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-container sign-In-container">
+                        <h4>Log In</h4>
+                        @Html.EditorFor(model => model.UserName, "User name", new { htmlAttributes = new { @placeholder = "User Name"} })
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        @Html.PasswordFor(model => model.Password, new { @name = "Password", @id = "Password", @placeholder ="Password" })
+                       @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        <input type="submit" value="Login" class="loginbtn" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

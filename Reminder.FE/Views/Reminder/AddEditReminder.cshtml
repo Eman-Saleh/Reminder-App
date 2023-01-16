@@ -1,0 +1,75 @@
+﻿@model Reminder.FE.Models.ReminderModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using System.Globalization
+
+@{
+    ViewData["Title"] ="Add Edit Reminder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="row">
+        <div class="col-12">
+            <div class="card accordion-item my-4">
+                <div class="card-header accordion-header p-0 position-relative mt-n4 mx-3 z-index-2" id="panelsStayOpen-headingOne">
+                        <h6 >Add Edit Reminder</h6>
+
+                </div>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="card-body p-4 accordion-body">
+                        <form asp-controller="Reminder" asp-action="AddEditReminder" method="post">
+                               @Html.HiddenFor(model=> model.Id)
+                          <div class="row form-group">
+                            <div class="col-md-4">
+                                @*make it drobdown*@
+                                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+                                <span class="fg-red">*</span>
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" }, @onchange = "changes=true;" })
+                                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.ReminderDate, htmlAttributes: new { @class = "control-label" })
+                                <span class="fg-red">*</span>                                
+                                @Html.EditorFor(model => model.ReminderDate, new { htmlAttributes = new { @class = "form-control DateTime_Picker"} })
+                                @Html.ValidationMessageFor(model => model.ReminderDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label" })
+                                <span class="fg-red">*</span>
+                                @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "Id", "Name"), "Select Category",
+                                new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="row form-group ">
+                            <div class="col-sm-12 text-center">
+                                <input type="submit"  value="save" onclick="changes=false" class="btn btn-orange mt-4" />
+                            </div>
+                        </div>
+                    </form> 
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        var changes = false;
+        window.onbeforeunload = function () {
+            if (changes) {
+                var message = "";
+                if (confirm(message)) return true;
+                else return false;
+            }
+        }
+        </script>
+}
