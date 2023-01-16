@@ -88,8 +88,8 @@ namespace Reminder.FE.Controllers
                         int userId = int.Parse(simpleAES.DecryptString(HttpContext.Session.GetString("EncryptedUserID")));
                         string _userMail=  _unitOfWork.UserTbls.GetByID(userId).Email;
 
-                        //   BackgroundJob.Schedule(()=>SendMail(ReminderMdl.Title + " " + ReminderMdl.CategoryId,_userMail),ReminderMdl.ReminderDate.Value );
-                        new BackgroundJobClient().Schedule( () => Hangfire.RecurringJob.AddOrUpdate(reminderTbl.Id.ToString(), () => SendMail(ReminderMdl.Title + " " + ReminderMdl.CategoryId, _userMail), ReminderMdl.ReminderDate.Value));
+                           BackgroundJob.Schedule(()=>SendMail(ReminderMdl.Title + " " + ReminderMdl.CategoryId,_userMail),ReminderMdl.ReminderDate.Value );
+                      //  new BackgroundJobClient().Schedule( () => Hangfire.RecurringJob.AddOrUpdate(reminderTbl.Id.ToString(), () => SendMail(ReminderMdl.Title + " " + ReminderMdl.CategoryId, _userMail), ReminderMdl.ReminderDate.Value));
 
                     }
                     return RedirectToAction("Index");
